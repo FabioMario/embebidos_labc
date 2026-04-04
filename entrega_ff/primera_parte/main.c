@@ -13,19 +13,11 @@ int main()
     int32_t b = -2;
     int32_t c = 3;
     coeff_t coefficients = {a, b, c};
-    printf("Resolving the equation: %dx^2 + %dx + %d = 0\n", a, b, c);
+    printf("Resolving the equation: ");
+    print_coeff(&coefficients);
     root_t *roots = eq_solver(&coefficients);
     printf("The roots are:\n");
-    if (roots->complex)
-    {
-        printf("Root 1: %d + %di\n", roots->real1, roots->imag1);
-        printf("Root 2: %d + %di\n", roots->real2, roots->imag2);
-    }
-    else
-    {
-        printf("Root 1: %d\n", roots->real1);
-        printf("Root 2: %d\n", roots->real2);
-    }
+    print_root(roots);
 
     printf("\n");
 
@@ -96,32 +88,13 @@ int main()
 
     matriz_t *sub = matrix_sub(&A, &B);
     printf("Matrix A:\n");
-    for (size_t i = 0; i < A.rows; i++)
-    {
-        for (size_t j = 0; j < A.cols; j++)
-        {
-            printf("%d ", A.data[i][j]);
-        }
-        printf("\n");
-    }
+    print_matriz(&A);
+    printf("\n");
     printf("Matrix B:\n");
-    for (size_t i = 0; i < B.rows; i++)
-    {
-        for (size_t j = 0; j < B.cols; j++)
-        {
-            printf("%d ", B.data[i][j]);
-        }
-        printf("\n");
-    }
-    printf("A - B:\n");
-    for (size_t i = 0; i < sub->rows; i++)
-    {
-        for (size_t j = 0; j < sub->cols; j++)
-        {
-            printf("%d ", sub->data[i][j]);
-        }
-        printf("\n");
-    }
+    print_matriz(&B);
+    printf("\n");
+    printf("Matrix A - B:\n");
+    print_matriz(sub);
 
     free(A.data[0]);
     free(A.data[1]);
@@ -198,20 +171,40 @@ int main()
     complex_t c1 = {1, 2};
     complex_t c2 = {3, 4};
     complex_t sum_result = sum(c1, c2);
-    printf("Sum: (%d + %di) + (%d + %di) = (%d + %di)\n", c1.real, c1.imag, c2.real, c2.imag, sum_result.real, sum_result.imag);
+    printf("Sum: ");
+    print_complex(&c1);
+    printf(" + ");
+    print_complex(&c2);
+    printf(" = ");
+    print_complex(&sum_result);
+    printf("\n");
     complex_t prod_result = prod(c1, c2);
-    printf("Product: (%d + %di) * (%d + %di) = (%d + %di)\n", c1.real, c1.imag, c2.real, c2.imag, prod_result.real, prod_result.imag);
+    printf("Product: ");
+    print_complex(&c1);
+    printf(" * ");
+    print_complex(&c2);
+    printf(" = ");
+    print_complex(&prod_result);
+    printf("\n");
 
     printf("\n");
 
     date_t twenty_twenty_five = {1, 1, 2025};
     date_t twenty_twenty_six = {1, 1, 2026};
     int days = days_left(twenty_twenty_five, twenty_twenty_six);
-    printf("Days between 01/01/2025 and 01/01/2026: %d\n", days);
+    printf("Days between ");
+    print_date(&twenty_twenty_five);
+    printf(" and ");
+    print_date(&twenty_twenty_six);
+    printf(": %d\n", days);
 
     date_t twenty_twenty_four = {1, 1, 2024};
     days = days_left(twenty_twenty_four, twenty_twenty_five);
-    printf("Days between 01/01/2024 and 01/01/2025: %d\n", days);
+    printf("Days between ");
+    print_date(&twenty_twenty_four);
+    printf(" and ");
+    print_date(&twenty_twenty_five);
+    printf(": %d\n", days);
 
     return 0;
 }

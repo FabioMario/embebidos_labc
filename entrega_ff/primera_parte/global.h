@@ -59,6 +59,12 @@ typedef struct matriz_t
     size_t cols;
 } matriz_t;
 
+void print_coeff(coeff_t *coeff);
+void print_root(root_t *root);
+void print_complex(complex_t *complex);
+void print_date(date_t *date);
+void print_matriz(matriz_t *matriz);
+
 // Prints the name of the group members.
 void init_lab();
 

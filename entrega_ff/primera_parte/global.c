@@ -5,6 +5,72 @@
 #include <stdlib.h>
 #include <string.h>
 
+void print_coeff(coeff_t *coeff)
+{
+    if (coeff == NULL)
+        printf("NULL\n");
+    else
+        printf("%dx^2 + %dx + %d = 0\n", coeff->a, coeff->b, coeff->c);
+}
+
+void print_root(root_t *root)
+{
+    if (root == NULL)
+    {
+        printf("NULL\n");
+    }
+    else
+    {
+        if (root->complex)
+        {
+            printf("Root 1: %d + %di\n", root->real1, root->imag1);
+            printf("Root 2: %d %c %di\n", root->real2,
+                   root->imag2 < 0 ? '-' : '+', abs(root->imag2));
+            return;
+        }
+
+        printf("Root 1: %d\n", root->real1);
+        printf("Root 2: %d\n", root->real2);
+    }
+}
+
+void print_complex(complex_t *complex)
+{
+    if (complex == NULL)
+        printf("NULL\n");
+    else
+        printf("(%d %c %di)", complex->real, complex->imag < 0 ? '-' : '+', abs(complex->imag));
+}
+
+void print_date(date_t *date)
+{
+    if (date == NULL)
+        printf("NULL\n");
+    else
+        printf("%02d/%02d/%04d", date->day, date->month, date->year);
+}
+
+void print_matriz(matriz_t *matriz)
+{
+    if (matriz == NULL || matriz->data == NULL)
+    {
+        printf("NULL\n");
+    }
+    else
+    {
+        for (size_t i = 0; i < matriz->rows; i++)
+        {
+            for (size_t j = 0; j < matriz->cols; j++)
+            {
+                printf("%d", matriz->data[i][j]);
+                if (j + 1 < matriz->cols)
+                    printf(" ");
+            }
+            printf("\n");
+        }
+    }
+}
+
 void init_lab()
 {
     printf("*** Grupo FF ***\n");

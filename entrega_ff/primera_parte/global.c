@@ -359,3 +359,28 @@ complex_t prod(complex_t a, complex_t b)
     result.imag = a.real * b.imag + a.imag * b.real;
     return result;
 }
+
+// Returns number of days since 1970-01-01.
+// Howard Hinnant's algorithm: https://howardhinnant.github.io/date_algorithms.html#days_from_civil
+int days_from_civil(date_t date)
+{
+    int y = date.year;
+    int m = date.month;
+    int d = date.day;
+
+    if (m <= 2)
+        y--;
+
+    int era = (y >= 0 ? y : y - 399) / 400;
+    unsigned yoe = (unsigned)(y - era * 400);
+    unsigned doy = (153 * (m > 2 ? m - 3 : m + 9) + 2) / 5 + d - 1;
+    unsigned doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
+    return era * 146097 + (int)doe - 719468;
+}
+
+int days_left(date_t start, date_t finish)
+{
+    int start_days = days_from_civil(start);
+    int finish_days = days_from_civil(finish);
+    return finish_days - start_days;
+}

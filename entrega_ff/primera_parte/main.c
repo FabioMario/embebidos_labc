@@ -202,5 +202,16 @@ int main()
     complex_t prod_result = prod(c1, c2);
     printf("Product: (%d + %di) * (%d + %di) = (%d + %di)\n", c1.real, c1.imag, c2.real, c2.imag, prod_result.real, prod_result.imag);
 
+    printf("\n");
+
+    date_t twenty_twenty_five = {1, 1, 2025};
+    date_t twenty_twenty_six = {1, 1, 2026};
+    int days = days_left(twenty_twenty_five, twenty_twenty_six);
+    printf("Days between 01/01/2025 and 01/01/2026: %d\n", days);
+
+    date_t twenty_twenty_four = {1, 1, 2024};
+    days = days_left(twenty_twenty_four, twenty_twenty_five);
+    printf("Days between 01/01/2024 and 01/01/2025: %d\n", days);
+
     return 0;
 }

@@ -267,7 +267,7 @@ int32_t string_words(char *string)
 {
     int32_t separators = 0;
     int32_t len = string_length(string);
-    for (size_t i = 0; i < len; i++)
+    for (int32_t i = 0; i < len; i++)
     {
         if (string[i] == ' ')
         {

@@ -7,8 +7,6 @@ int main()
     init_lab();
 
     // eq_solver
-    // THIS EXAMPLE PRODUCES A WRONG OUTPUT BECAUSE THE ROOTS SHOULD BE FLOATS!!!
-    // THE RESULT IS GETTING TRUNCATED, LOSING THE DECIMAL PART.
     int32_t a = 1;
     int32_t b = -2;
     int32_t c = 3;

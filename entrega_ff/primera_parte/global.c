@@ -23,14 +23,15 @@ void print_root(root_t *root)
     {
         if (root->complex)
         {
-            printf("Root 1: %d + %di\n", root->real1, root->imag1);
-            printf("Root 2: %d %c %di\n", root->real2,
-                   root->imag2 < 0 ? '-' : '+', abs(root->imag2));
+            printf("Root 1: %g %c %gi\n", root->real1,
+                   root->imag1 < 0 ? '-' : '+', fabs(root->imag1));
+            printf("Root 2: %g %c %gi\n", root->real2,
+                   root->imag2 < 0 ? '-' : '+', fabs(root->imag2));
             return;
         }
 
-        printf("Root 1: %d\n", root->real1);
-        printf("Root 2: %d\n", root->real2);
+        printf("Root 1: %g\n", root->real1);
+        printf("Root 2: %g\n", root->real2);
     }
 }
 
@@ -79,23 +80,29 @@ void init_lab()
 
 root_t *eq_solver(coeff_t *coeficientes)
 {
+    if (coeficientes == NULL)
+        return NULL;
+
     // We have to allocate memory for the pointer we are going to return.
     // It's the caller's responsibility to free it when no longer needed.
     root_t *roots = malloc(sizeof(root_t));
+    if (roots == NULL)
+        return NULL;
 
     // "->" is used here instead of "." because `coeficientes` is a pointer to,
     // not the struct value itself.
-    int32_t a = coeficientes->a;
-    int32_t b = coeficientes->b;
-    int32_t c = coeficientes->c;
+    double a = (double)coeficientes->a;
+    double b = (double)coeficientes->b;
+    double c = (double)coeficientes->c;
 
-    int32_t discriminant = b * b - 4 * a * c;
+    double discriminant = b * b - 4.0 * a * c;
+    double denominator = 2.0 * a;
 
     if (discriminant >= 0)
     {
         // Real roots.
-        roots->real1 = (-b + sqrt(discriminant)) / (2 * a);
-        roots->real2 = (-b - sqrt(discriminant)) / (2 * a);
+        roots->real1 = (-b + sqrt(discriminant)) / denominator;
+        roots->real2 = (-b - sqrt(discriminant)) / denominator;
         roots->imag1 = 0;
         roots->imag2 = 0;
         roots->complex = false;
@@ -103,10 +110,10 @@ root_t *eq_solver(coeff_t *coeficientes)
     else
     {
         // Complex roots.
-        roots->real1 = -b / (2 * a);
-        roots->real2 = -b / (2 * a);
-        roots->imag1 = sqrt(-discriminant) / (2 * a);
-        roots->imag2 = -sqrt(-discriminant) / (2 * a);
+        roots->real1 = -b / denominator;
+        roots->real2 = -b / denominator;
+        roots->imag1 = sqrt(-discriminant) / denominator;
+        roots->imag2 = -sqrt(-discriminant) / denominator;
         roots->complex = true;
     }
 

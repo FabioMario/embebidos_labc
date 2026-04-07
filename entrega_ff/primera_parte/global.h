@@ -17,13 +17,13 @@ typedef struct coeff_t
 typedef struct root_t
 {
     // Real part of the first root.
-    int32_t real1;
+    double real1;
     // Imaginary part of the first root.
-    int32_t imag1;
+    double imag1;
     // Real part of the second root.
-    int32_t real2;
+    double real2;
     // Imaginary part of the second root.
-    int32_t imag2;
+    double imag2;
     // True if the  roots are complex conjugates.
     bool complex;
 } root_t;

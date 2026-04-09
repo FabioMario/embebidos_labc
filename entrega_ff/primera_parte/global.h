@@ -59,6 +59,14 @@ typedef struct matriz_t
     size_t cols;
 } matriz_t;
 
+typedef enum data_type_t
+{
+    TYPE_INT8,
+    TYPE_INT32,
+    TYPE_FLOAT,
+    TYPE_DOUBLE,
+} data_type_t;
+
 void print_coeff(coeff_t *coeff);
 void print_root(root_t *root);
 void print_complex(complex_t *complex);
@@ -76,16 +84,16 @@ root_t *eq_solver(coeff_t *coeficientes);
 int32_t bin2dec(char *binary, bool sign);
 
 // Prints the array in reverse order, using a generic pointer.
-void print_reverse_array(void *array, size_t data_type, size_t array_size);
+void print_reverse_array(void *array, data_type_t type, size_t array_size);
 
 // Prints the maximum value and its index in the array.
-void max_index(void *array, size_t data_type, size_t array_size);
+int max_index(void *array, data_type_t type, size_t array_size);
 
 // Prints the minimum value and its index in the array.
-void min_index(void *array, size_t data_type, size_t array_size);
+int min_index(void *array, data_type_t type, size_t array_size);
 
 // Returns the sub A - B. The matrices must have the same dimensions.
-matriz_t *matrix_sub(matriz_t *A, matriz_t *B);
+matriz_t *matrix_sub(matriz_t A, matriz_t B);
 
 // Swaps the values of two pointers. Returns 0 on success, -1 on failure.
 int swap(void *elem_1, void *elem_2, size_t data_type);
@@ -119,10 +127,10 @@ void string_to_caps(char *string);
 void string_to_min(char *string);
 
 // Returns the sum of two complex numbers.
-complex_t sum(complex_t a, complex_t b);
+complex_t *sum(complex_t a, complex_t b);
 
 // Returns the product of two complex numbers.
-complex_t prod(complex_t a, complex_t b);
+complex_t *prod(complex_t a, complex_t b);
 
 // Calculates the difference in days between two dates.
 int days_left(date_t start, date_t finish);

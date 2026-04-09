@@ -144,125 +144,156 @@ int32_t bin2dec(char *binary, bool sign)
 
 // Prints the element pointed by `elem` according to its data type.
 // Assumes data_type is a char or an integer.
-void print_element(void *elem, size_t data_type, char *suffix)
+void print_element(void *elem, data_type_t type, char *suffix)
 {
-    if (data_type == sizeof(char))
+    switch (type)
     {
-        printf("%c%s", *(char *)elem, suffix);
-    }
-    else if (data_type == sizeof(int16_t))
-    {
-        printf("%d%s", *(int16_t *)elem, suffix);
-    }
-    else if (data_type == sizeof(int32_t))
-    {
+    case TYPE_INT8:
+        printf("%d%s", *(int8_t *)elem, suffix);
+        break;
+    case TYPE_INT32:
         printf("%d%s", *(int32_t *)elem, suffix);
-    }
-    else if (data_type == sizeof(int64_t))
-    {
-        printf("%lld%s", (long long)*(int64_t *)elem, suffix);
+        break;
+    case TYPE_FLOAT:
+        printf("%f%s", *(float *)elem, suffix);
+        break;
+    case TYPE_DOUBLE:
+        printf("%lf%s", *(double *)elem, suffix);
+        break;
     }
 }
 
 // Returns > 0 if a > b, < 0 if a < b, 0 if equal.
 // Assumes data_type is a char or an integer.
-int compare_elements(void *a, void *b, size_t data_type)
+int compare_elements(void *a, void *b, data_type_t type)
 {
-    if (data_type == sizeof(char))
-        return (int)(*(char *)a) - (int)(*(char *)b);
-    if (data_type == sizeof(int16_t))
-        return (int)(*(int16_t *)a) - (int)(*(int16_t *)b);
-    if (data_type == sizeof(int32_t))
+    switch (type)
+    {
+    case TYPE_INT8:
+        return (int)(*(int8_t *)a) - (int)(*(int8_t *)b);
+    case TYPE_INT32:
     {
         int32_t aa = *(int32_t *)a, bb = *(int32_t *)b;
         return (aa > bb) - (aa < bb);
     }
-    if (data_type == sizeof(int64_t))
+    case TYPE_FLOAT:
     {
-        int64_t aa = *(int64_t *)a, bb = *(int64_t *)b;
+        float aa = *(float *)a, bb = *(float *)b;
         return (aa > bb) - (aa < bb);
+    }
+    case TYPE_DOUBLE:
+    {
+        double aa = *(double *)a, bb = *(double *)b;
+        return (aa > bb) - (aa < bb);
+    }
     }
     return 0;
 }
 
-void print_reverse_array(void *array, size_t data_type, size_t array_size)
+size_t size_of(data_type_t type)
+{
+    switch (type)
+    {
+    case TYPE_INT8:
+        return sizeof(int8_t);
+    case TYPE_INT32:
+        return sizeof(int32_t);
+    case TYPE_FLOAT:
+        return sizeof(float);
+    case TYPE_DOUBLE:
+        return sizeof(double);
+    }
+    return 0;
+}
+
+void print_reverse_array(void *array, data_type_t type, size_t array_size)
 {
     // We can't do pointer arithmetic with void*, so we need to cast it to char*.
     char *ptr = (char *)array;
 
     for (size_t i = array_size; i > 0; i--)
     {
-        print_element(ptr + (i - 1) * data_type, data_type, " ");
+        print_element(ptr + (i - 1) * size_of(type), type, " ");
     }
     printf("\n");
 }
 
-void max_index(void *array, size_t data_type, size_t array_size)
+int max_index(void *array, data_type_t type, size_t array_size)
 {
+    if (array == NULL || array_size == 0)
+        return -1;
+
     char *ptr = (char *)array;
     size_t max_i = 0;
 
     for (size_t i = 1; i < array_size; i++)
     {
-        void *current = ptr + i * data_type;
-        void *max = ptr + max_i * data_type;
-        if (compare_elements(current, max, data_type) > 0)
+        void *current = ptr + i * size_of(type);
+        void *max = ptr + max_i * size_of(type);
+        if (compare_elements(current, max, type) > 0)
         {
             max_i = i;
         }
     }
 
     printf("Max index: %zu, Value: ", max_i);
-    print_element(ptr + max_i * data_type, data_type, "\n");
+    print_element(ptr + max_i * size_of(type), type, "\n");
+    return max_i;
 }
 
-void min_index(void *array, size_t data_type, size_t array_size)
+int min_index(void *array, data_type_t type, size_t array_size)
 {
+    if (array == NULL || array_size == 0)
+        return -1;
+
     char *ptr = (char *)array;
     size_t min_i = 0;
 
     for (size_t i = 1; i < array_size; i++)
     {
-        void *current = ptr + i * data_type;
-        void *min = ptr + min_i * data_type;
-        if (compare_elements(current, min, data_type) < 0)
+        void *current = ptr + i * size_of(type);
+        void *min = ptr + min_i * size_of(type);
+        if (compare_elements(current, min, type) < 0)
         {
             min_i = i;
         }
     }
 
     printf("Min index: %zu, Value: ", min_i);
-    print_element(ptr + min_i * data_type, data_type, "\n");
+    print_element(ptr + min_i * size_of(type), type, "\n");
+    return min_i;
 }
 
-matriz_t *matrix_sub(matriz_t *A, matriz_t *B)
+matriz_t *matrix_sub(matriz_t A, matriz_t B)
 {
-    if (A->rows != B->rows || A->cols != B->cols)
+    if (A.rows != B.rows || A.cols != B.cols)
     {
         fprintf(stderr, "Error: Matrices not matching dimensions");
         return NULL;
     }
 
     matriz_t *result = malloc(sizeof(matriz_t));
-    result->rows = A->rows;
-    result->cols = A->cols;
-    // `matriz_t->data` is a pointer to a pointer; `data` points to rows, and the rows point to columns.
-    // That means the rows live outside the struct itself, so we need a separate allocation for them.
-    result->data = malloc(result->rows * sizeof(int16_t *));
+    result->rows = A.rows;
+    result->cols = A.cols;
 
-    for (size_t i = 0; i < result->rows; i++)
+    // Flatten the rows and columns into a single array.
+    size_t total = result->rows * result->cols;
+    int16_t *array = malloc(total * sizeof(int16_t));
+    int16_t *a = (int16_t *)A.data;
+    int16_t *b = (int16_t *)B.data;
+    for (size_t i = 0; i < total; i++)
     {
-        result->data[i] = malloc(result->cols * sizeof(int16_t));
-        for (size_t j = 0; j < result->cols; j++)
-        {
-            result->data[i][j] = A->data[i][j] - B->data[i][j];
-        }
+        array[i] = a[i] - b[i];
     }
+    result->data = (int16_t **)array;
     return result;
 }
 
 int swap(void *elem_1, void *elem_2, size_t data_type)
 {
+    if (elem_1 == NULL || elem_2 == NULL)
+        return -1;
+
     void *temp = malloc(data_type);
     if (temp == NULL)
         return -1;
@@ -326,6 +357,9 @@ char *reverse_string(char *string)
 
 int32_t string_length(char *string)
 {
+    if (string == NULL)
+        return -1;
+
     int32_t length = 0;
     while (string[length] != '\0')
     {
@@ -338,6 +372,11 @@ int32_t string_length(char *string)
 
 int32_t string_words(char *string)
 {
+    if (string == NULL)
+        return -1;
+    if (string[0] == '\0')
+        return 0;
+
     int32_t separators = 0;
     int32_t len = string_length(string);
     for (int32_t i = 0; i < len; i++)
@@ -354,7 +393,11 @@ int32_t string_words(char *string)
         }
     }
 
-    return separators + 1;
+    if (string[len - 1] == ' ')
+        // Spaces at the end of a string aren't separating words.
+        return separators;
+    else
+        return separators + 1;
 }
 
 int string_copy(char *source, char *destination)
@@ -375,6 +418,9 @@ int string_copy(char *source, char *destination)
 int find_in_string(char *haystack, char *needle)
 {
     char first_char = needle[0];
+    if (first_char == '\0') // The needle is an empty string.
+        return 0;
+
     int i = 0;
     while (haystack[i] != '\0')
     {
@@ -417,19 +463,25 @@ void string_to_min(char *string)
     }
 }
 
-complex_t sum(complex_t a, complex_t b)
+complex_t *sum(complex_t a, complex_t b)
 {
-    complex_t result;
-    result.real = a.real + b.real;
-    result.imag = a.imag + b.imag;
+    complex_t *result = malloc(sizeof(complex_t));
+    if (result == NULL)
+        return NULL;
+
+    result->real = a.real + b.real;
+    result->imag = a.imag + b.imag;
     return result;
 }
 
-complex_t prod(complex_t a, complex_t b)
+complex_t *prod(complex_t a, complex_t b)
 {
-    complex_t result;
-    result.real = a.real * b.real - a.imag * b.imag;
-    result.imag = a.real * b.imag + a.imag * b.real;
+    complex_t *result = malloc(sizeof(complex_t));
+    if (result == NULL)
+        return NULL;
+
+    result->real = a.real * b.real - a.imag * b.imag;
+    result->imag = a.real * b.imag + a.imag * b.real;
     return result;
 }
 

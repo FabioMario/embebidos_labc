@@ -16,9 +16,7 @@ void print_coeff(coeff_t *coeff)
 void print_root(root_t *root)
 {
     if (root == NULL)
-    {
         printf("NULL\n");
-    }
     else
     {
         if (root->complex)
@@ -54,9 +52,7 @@ void print_date(date_t *date)
 void print_matriz(matriz_t *matriz)
 {
     if (matriz == NULL || matriz->data == NULL)
-    {
         printf("NULL\n");
-    }
     else
     {
         int16_t *array = (int16_t *)matriz->data;
@@ -135,10 +131,9 @@ int32_t bin2dec(char *binary, bool sign)
             power *= 2;
         }
     }
+
     if (sign && binary[0] == '1')
-    {
         result -= power; // Corrects the value (two's complement).
-    }
 
     return result;
 }
@@ -255,9 +250,7 @@ int min_index(void *array, data_type_t type, size_t array_size)
         void *current = ptr + i * size_of(type);
         void *min = ptr + min_i * size_of(type);
         if (compare_elements(current, min, type) < 0)
-        {
             min_i = i;
-        }
     }
 
     printf("Min index: %zu, Value: ", min_i);
@@ -447,9 +440,7 @@ void string_to_caps(char *string)
     for (size_t i = 0; string[i] != '\0'; i++)
     {
         if (string[i] >= 'a' && string[i] <= 'z')
-        {
             string[i] = string[i] - ('a' - 'A'); // Difference in the ASCII table.
-        }
     }
 }
 
@@ -458,9 +449,7 @@ void string_to_min(char *string)
     for (size_t i = 0; string[i] != '\0'; i++)
     {
         if (string[i] >= 'A' && string[i] <= 'Z')
-        {
             string[i] = string[i] + ('a' - 'A'); // Difference in the ASCII table.
-        }
     }
 }
 

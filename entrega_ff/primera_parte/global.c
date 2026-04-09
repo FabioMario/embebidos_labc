@@ -59,11 +59,12 @@ void print_matriz(matriz_t *matriz)
     }
     else
     {
+        int16_t *array = (int16_t *)matriz->data;
         for (size_t i = 0; i < matriz->rows; i++)
         {
             for (size_t j = 0; j < matriz->cols; j++)
             {
-                printf("%d", matriz->data[i][j]);
+                printf("%d", array[i * matriz->cols + j]);
                 if (j + 1 < matriz->cols)
                     printf(" ");
             }

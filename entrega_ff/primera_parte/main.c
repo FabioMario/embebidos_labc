@@ -41,50 +41,42 @@ int main()
     int32_t to_reverse[] = {1, 2, 3};
     printf("Original array: 1 2 3\n");
     printf("Reversed array: ");
-    print_reverse_array(to_reverse, sizeof(int32_t), 3);
+    print_reverse_array(to_reverse, TYPE_INT32, 3);
 
     // max_index
     int32_t to_get_max[] = {1, 3, 2};
     printf("Array: 1 3 2 | ");
-    max_index(to_get_max, sizeof(int32_t), 3);
+    max_index(to_get_max, TYPE_INT32, 3);
 
     // min_index
     int32_t to_get_min[] = {1, 3, 2};
     printf("Array: 1 3 2 | ");
-    min_index(to_get_min, sizeof(int32_t), 3);
+    min_index(to_get_min, TYPE_INT32, 3);
 
     printf("\n");
 
     // matrix_sub
     // 1 2 3 - 1 2 3
     // 4 5 6   4 5 6
-    matriz_t A;
-    A.rows = 2;
-    A.cols = 3;
-    A.data = malloc(A.rows * sizeof(int16_t *));
-    A.data[0] = malloc(A.cols * sizeof(int16_t));
-    A.data[1] = malloc(A.cols * sizeof(int16_t));
-    A.data[0][0] = 1;
-    A.data[0][1] = 2;
-    A.data[0][2] = 3;
-    A.data[1][0] = 4;
-    A.data[1][1] = 5;
-    A.data[1][2] = 6;
+    int16_t *a_data = malloc(6 * sizeof(int16_t));
+    a_data[0] = 1;
+    a_data[1] = 2;
+    a_data[2] = 3;
+    a_data[3] = 4;
+    a_data[4] = 5;
+    a_data[5] = 6;
+    matriz_t A = {(int16_t **)a_data, 2, 3};
 
-    matriz_t B;
-    B.rows = 2;
-    B.cols = 3;
-    B.data = malloc(B.rows * sizeof(int16_t *));
-    B.data[0] = malloc(B.cols * sizeof(int16_t));
-    B.data[1] = malloc(B.cols * sizeof(int16_t));
-    B.data[0][0] = 1;
-    B.data[0][1] = 2;
-    B.data[0][2] = 3;
-    B.data[1][0] = 4;
-    B.data[1][1] = 5;
-    B.data[1][2] = 6;
+    int16_t *b_data = malloc(6 * sizeof(int16_t));
+    b_data[0] = 1;
+    b_data[1] = 2;
+    b_data[2] = 3;
+    b_data[3] = 4;
+    b_data[4] = 5;
+    b_data[5] = 6;
+    matriz_t B = {(int16_t **)b_data, 2, 3};
 
-    matriz_t *sub = matrix_sub(&A, &B);
+    matriz_t *sub = matrix_sub(A, B);
     printf("Matrix A:\n");
     print_matriz(&A);
     printf("\n");
@@ -94,14 +86,8 @@ int main()
     printf("Matrix A - B:\n");
     print_matriz(sub);
 
-    free(A.data[0]);
-    free(A.data[1]);
-    free(A.data);
-    free(B.data[0]);
-    free(B.data[1]);
-    free(B.data);
-    free(sub->data[0]);
-    free(sub->data[1]);
+    free(a_data);
+    free(b_data);
     free(sub->data);
     free(sub);
 
@@ -168,22 +154,24 @@ int main()
     // sum y prod
     complex_t c1 = {1, 2};
     complex_t c2 = {3, 4};
-    complex_t sum_result = sum(c1, c2);
+    complex_t *sum_result = sum(c1, c2);
     printf("Sum: ");
     print_complex(&c1);
     printf(" + ");
     print_complex(&c2);
     printf(" = ");
-    print_complex(&sum_result);
+    print_complex(sum_result);
     printf("\n");
-    complex_t prod_result = prod(c1, c2);
+    free(sum_result);
+    complex_t *prod_result = prod(c1, c2);
     printf("Product: ");
     print_complex(&c1);
     printf(" * ");
     print_complex(&c2);
     printf(" = ");
-    print_complex(&prod_result);
+    print_complex(prod_result);
     printf("\n");
+    free(prod_result);
 
     printf("\n");
 

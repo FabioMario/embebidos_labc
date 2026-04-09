@@ -267,12 +267,21 @@ matriz_t *matrix_sub(matriz_t A, matriz_t B)
     }
 
     matriz_t *result = malloc(sizeof(matriz_t));
+    if (result == NULL)
+        return NULL;
+
     result->rows = A.rows;
     result->cols = A.cols;
 
     // Flatten the rows and columns into a single array.
     size_t total = result->rows * result->cols;
     int16_t *array = malloc(total * sizeof(int16_t));
+    if (array == NULL)
+    {
+        free(result); // Avoid leaking the first allocation if this one fails.
+        return NULL;
+    }
+
     int16_t *a = (int16_t *)A.data;
     int16_t *b = (int16_t *)B.data;
     for (size_t i = 0; i < total; i++)
@@ -301,6 +310,9 @@ int swap(void *elem_1, void *elem_2, size_t data_type)
 
 int consonantes(char *string)
 {
+    if (string == NULL)
+        return -1;
+
     int count = 0;
     for (size_t i = 0; string[i] != '\0'; i++)
     {
@@ -320,6 +332,9 @@ int consonantes(char *string)
 
 int vocales(char *string)
 {
+    if (string == NULL)
+        return -1;
+
     int count = 0;
     for (size_t i = 0; string[i] != '\0'; i++)
     {
@@ -335,6 +350,9 @@ int vocales(char *string)
 
 char *reverse_string(char *string)
 {
+    if (string == NULL)
+        return NULL;
+
     size_t len = strlen(string);
     char *reversed = malloc(len + 1); // `strlen` does not include the last "\0" character.
     if (reversed == NULL)
@@ -411,6 +429,9 @@ int string_copy(char *source, char *destination)
 
 int find_in_string(char *haystack, char *needle)
 {
+    if (haystack == NULL || needle == NULL)
+        return -1;
+
     char first_char = needle[0];
     if (first_char == '\0') // The needle is an empty string.
         return 0;

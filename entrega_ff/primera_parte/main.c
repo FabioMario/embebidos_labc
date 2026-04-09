@@ -16,6 +16,7 @@ int main()
     root_t *roots = eq_solver(&coefficients);
     printf("The roots are:\n");
     print_root(roots);
+    free(roots);
 
     printf("\n");
 
